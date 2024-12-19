@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lethal JS Example</title>
+
+    <script src="https://cdn.jsdelivr.net/gh/simplyrohan/lethal-js/README.md"></script>
+</head>
+<body>
+    <iframe id="frame" style="height: 100vh; width: 100vw;"></iframe>
+
+    <script type="module">
+        const frame = document.getElementById('frame');
+        
+        setTransport('epoxy');
+        setWisp('wss://your.wisp.server/wisp/');
+
+        frame.src = await getProxied('https://www.google.com')
+    </script>
+</body>
+</html>
