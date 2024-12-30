@@ -1,17 +1,17 @@
 // Ultraviolet
 await import('https://cdn.jsdelivr.net/npm/@titaniumnetwork-dev/ultraviolet/dist/uv.bundle.js');
 // UV Config
-await import('/uv.config.js');
+await import('./uv.config.js');
 // Bare Mux
 import * as BareMux from 'https://cdn.jsdelivr.net/npm/@mercuryworkshop/bare-mux/dist/index.mjs';
 
-const connection = new BareMux.BareMuxConnection("/bareworker.js");
+const connection = new BareMux.BareMuxConnection("/lethal-js/bareworker.js");
 
 let wispURL = null; // Not exported because it needs to be set through `setWisp`
 let transportURL = null; // Not exported because it needs to be set through `setTransport`
 
 // Service Worker for Ultraviolet
-const stockSW = "/ultraworker.js";
+const stockSW = "./ultraworker.js";
 const swAllowedHostnames = ["localhost", "127.0.0.1"];
 async function registerSW() {
     if (!navigator.serviceWorker) {

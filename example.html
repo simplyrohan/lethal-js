@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lethal JS Example</title>
-
-    <script src="https://cdn.jsdelivr.net/gh/simplyrohan/lethal-js/README.md"></script>
 </head>
 <body>
     <iframe id="frame" style="height: 100vh; width: 100vw;"></iframe>
 
     <script type="module">
+        import { setTransport, setWisp, makeURL, getProxied } from '/lethal-js/lethal.mjs'
         const frame = document.getElementById('frame');
         
         setTransport('epoxy');
-        setWisp('wss://your.wisp.server/wisp/');
+        setWisp('wss://wisp.mercurywork.shop/wisp/');
 
-        frame.src = await getProxied('https://www.google.com')
+        frame.src = await getProxied(makeURL('Hello World!'));
+
     </script>
 </body>
 </html>

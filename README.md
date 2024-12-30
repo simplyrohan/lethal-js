@@ -3,12 +3,14 @@ A clean framework for creating web-proxies with just 4 lines of code
 
 # Usage
 ```js
-const frame = document.getElementById('frame');
-        
-setTransport('epoxy'); // You can also use 'libcurl' or supply your own path/url
-setWisp('wss://your.wisp.server/wisp/');
+import { setTransport, setWisp, makeURL, getProxied } from '/lethal-js/lethal.mjs'
 
-frame.src = await getProxied('https://www.google.com')
+const frame = document.getElementById('frame');
+
+setTransport('epoxy');
+setWisp('wss://wisp.mercurywork.shop/wisp/');
+
+frame.src = await getProxied(makeURL('Hello World!'));
 ```
 
 See `example.html` for more.
