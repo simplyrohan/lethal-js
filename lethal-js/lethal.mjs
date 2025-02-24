@@ -10,8 +10,20 @@ const connection = new BareMux.BareMuxConnection("/lethal-js/bareworker.js");
 let wispURL = null; // Not exported because it needs to be set through `setWisp`
 let transportURL = null; // Not exported because it needs to be set through `setTransport`
 
+const scramjet = new ScramjetController({
+    files: {
+        wasm: "/scram/scramjet.wasm.wasm",
+        worker: "/scram/scramjet.worker.js",
+        client: "/scram/scramjet.client.js",
+        shared: "/scram/scramjet.shared.js",
+        sync: "/scram/scramjet.sync.js",
+    }
+});
+
+scramjet.init("./sw.js");
+
 // Service Worker for Ultraviolet
-const stockSW = "./ultraworker.js";
+// const stockSW = "/lethal-js/worker.js";
 const swAllowedHostnames = ["localhost", "127.0.0.1"];
 async function registerSW() {
     if (!navigator.serviceWorker) {
@@ -24,7 +36,7 @@ async function registerSW() {
         throw new Error("Your browser doesn't support service workers.");
     }
 
-    await navigator.serviceWorker.register(stockSW);
+    // await navigator.serviceWorker.register(stockSW);
 }
 await registerSW(); // Register the service worker
 console.log('lethal.js: Service Worker registered');
@@ -103,7 +115,8 @@ export function getWisp() {
 export async function getProxied(input) {
     let url = makeURL(input, 'https://www.google.com/search?q=%s');
 
-    let viewUrl = __uv$config.prefix + __uv$config.encodeUrl(url);
+    // let viewUrl = __uv$config.prefix + __uv$config.encodeUrl(url);
+    let viewUrl = await scramjet.encodeUrl(url);
 
     return viewUrl;
 }

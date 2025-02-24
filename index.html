@@ -1,22 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="prefetch" href="/scram/scramjet.worker.js" />
+    <link rel="prefetch" href="/scram/scramjet.shared.js" />
+
+    <script src="/scram/scramjet.controller.js"></script>
     <title>Lethal JS Example</title>
 </head>
+
 <body>
     <iframe id="frame" style="height: 100vh; width: 100vw;"></iframe>
 
     <script type="module">
         import { setTransport, setWisp, makeURL, getProxied } from '/lethal-js/lethal.mjs'
         const frame = document.getElementById('frame');
-        
-        setTransport('epoxy');
-        setWisp('wss://wisp.mercurywork.shop/wisp/');
 
-        frame.src = await getProxied(makeURL('Hello World!'));
+        setTransport('epoxy');
+        setWisp('wss://anura.pro/');
+
+        frame.src = await getProxied('https://open.spotify.com');
 
     </script>
 </body>
+
 </html>
