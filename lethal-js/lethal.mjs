@@ -1,46 +1,16 @@
 // Ultraviolet
-await import('https://cdn.jsdelivr.net/npm/@titaniumnetwork-dev/ultraviolet/dist/uv.bundle.js');
-// UV Config
-await import('./uv.config.js');
-// Bare Mux
+import { encodeUV, initUV } from './ultraviolet.mjs';
+// Scramjet
+import { encodeSJ, initSJ } from './scramjet.mjs';
+
+// BareMux
 import * as BareMux from 'https://cdn.jsdelivr.net/npm/@mercuryworkshop/bare-mux/dist/index.mjs';
 
 const connection = new BareMux.BareMuxConnection("/lethal-js/bareworker.js");
 
+let proxy = null;
 let wispURL = null; // Not exported because it needs to be set through `setWisp`
 let transportURL = null; // Not exported because it needs to be set through `setTransport`
-
-const scramjet = new ScramjetController({
-    files: {
-        wasm: "/scram/scramjet.wasm.wasm",
-        worker: "/scram/scramjet.worker.js",
-        client: "/scram/scramjet.client.js",
-        shared: "/scram/scramjet.shared.js",
-        sync: "/scram/scramjet.sync.js",
-    }
-});
-
-scramjet.init("./sw.js");
-
-// Service Worker for Ultraviolet
-// const stockSW = "/lethal-js/worker.js";
-const swAllowedHostnames = ["localhost", "127.0.0.1"];
-async function registerSW() {
-    if (!navigator.serviceWorker) {
-        if (
-            location.protocol !== "https:" &&
-            !swAllowedHostnames.includes(location.hostname)
-        )
-            throw new Error("Service workers cannot be registered without https.");
-
-        throw new Error("Your browser doesn't support service workers.");
-    }
-
-    // await navigator.serviceWorker.register(stockSW);
-}
-await registerSW(); // Register the service worker
-console.log('lethal.js: Service Worker registered');
-
 
 /**
  * Convert and any search/url bar input into a formatted URL ready for use
@@ -60,6 +30,25 @@ export function makeURL(input, template = 'https://www.google.com/search?q=%s') 
 
     return template.replace("%s", encodeURIComponent(input));
 }
+
+/**
+ * Set the proxy method for the connection (`uv` for Ultraviolet, `sj` for Scramjet)
+ * @param {string} method - The proxy method to use (`'uv'` or `'sj'`)
+*/
+export async function setProxy(method) {
+    proxy = method;
+
+    if (method == 'uv') {
+        await initUV();
+    }
+    else if (method == 'sj') {
+        await initSJ();
+    }
+    else {
+        console.error('lethal.js: Invalid proxy method ' + method);
+    }
+}
+await setProxy('uv'); // Default to Ultraviolet
 
 async function updateBareMux() {
     if (transportURL != null && wispURL != null) {
@@ -115,8 +104,12 @@ export function getWisp() {
 export async function getProxied(input) {
     let url = makeURL(input, 'https://www.google.com/search?q=%s');
 
-    // let viewUrl = __uv$config.prefix + __uv$config.encodeUrl(url);
-    let viewUrl = await scramjet.encodeUrl(url);
+    if (proxy == 'uv') {
+        return await encodeUV(url);
+    }
+    if (proxy == 'sj') {
+        return await encodeSJ(url);
+    }
 
     return viewUrl;
 }
