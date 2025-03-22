@@ -5,7 +5,7 @@ await import('./uv.config.js');
 // Bare Mux
 import * as BareMux from 'https://cdn.jsdelivr.net/npm/@mercuryworkshop/bare-mux/dist/index.mjs';
 
-const connection = new BareMux.BareMuxConnection("/lethal-js/bareworker.js");
+const connection = new BareMux.BareMuxConnection("/bareworker.js");
 
 let wispURL = null; // Not exported because it needs to be set through `setWisp`
 let transportURL = null; // Not exported because it needs to be set through `setTransport`
